@@ -3,10 +3,45 @@ This is the final readme needed for the submission.
 # Prompts
 
 ## Prompt 1
+Crea una aplicación React de seguimiento de hábitos basada en estas user stories:
+
+US-01: Como usuario, quiero definir hábitos personales para llevar el control de mis rutinas.
+US-02: Como usuario, quiero marcar hábitos como completados para saber si he seguido mis objetivos.
+US-03: Como usuario, quiero ver un calendario de cumplimiento para visualizar mi progreso.
+US-04: Como usuario, quiero eliminar hábitos antiguos para mantener solo los relevantes.
+
+Criterios de aceptación:
+- Todas las funcionalidades deben estar disponibles en la interfaz principal.
+- El usuario debe poder deshacer acciones cuando sea necesario.
+- El sistema debe mostrar un mensaje de confirmación después de cada acción.
+- Los datos deben guardarse correctamente y ser accesibles posteriormente.
+
+Implementa una app sencilla y clara para un proyecto académico. Usa localStorage para guardar los hábitos y sus fechas de cumplimiento.
 
 ## Prompt 2
+Revisa el código actual y corrige lo necesario para que la app cumpla todos estos puntos:
 
-## Prompt 3
+- Crear hábitos personales.
+- Marcar hábitos como completados.
+- No permitir marcar el mismo hábito dos veces el mismo día.
+- Mostrar un calendario o progreso de los últimos 7 días.
+- Eliminar hábitos antiguos.
+- Mostrar mensajes de confirmación al crear, completar o eliminar.
+- Permitir deshacer la última acción importante, especialmente completar o eliminar.
+- Guardar todo correctamente en localStorage.
+
+
+Además, mejora el diseño visual de la aplicación sin cambiar la lógica principal.
+
+Quiero:
+- Interfaz limpia y clara.
+- Formulario visible para crear hábitos.
+- Hábitos mostrados en tarjetas.
+- Botones claros para completar, eliminar y deshacer.
+- Mensajes de confirmación visibles.
+- Calendario de cumplimiento de los últimos 7 días.
+- Diseño responsive para móvil y ordenador.
+- CSS sencillo y organizado.
 
 
 # Screenshots of the final product
