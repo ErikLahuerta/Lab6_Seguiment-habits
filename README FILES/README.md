@@ -54,4 +54,10 @@ Create a new Habit
 Displaying all created Habits
 ![alt text](habitScreen.png "Habit Screen")
 # Reflections on Copilot
+Durant el desenvolupament de l’aplicació hem utilitzat GitHub Copilot com a eina de suport per crear una aplicació en React basada en les user stories del seguiment d’hàbits: afegir hàbits, marcar-los com completats, veure el progrés i eliminar hàbits antics.
 
+Copilot ens ha ajudat sobretot a generar l’estructura inicial del projecte, crear components i afegir funcionalitats com el formulari d’hàbits, la llista, el calendari i la persistència de dades amb localStorage. També ens ha facilitat afegir missatges de confirmació i opcions per desfer accions.
+
+Tot i això, hem vist que era necessari donar-li prompts clars i concrets, ja que amb instruccions massa generals no sempre generava exactament el que necessitàvem. Per això hem anat refinant els prompts i revisant el codi abans d’acceptar-lo.
+
+En conclusió, Copilot ens ha permès avançar més ràpidament, però sempre hem hagut de revisar, provar i adaptar el codi per assegurar-nos que complia els requisits de l’activitat.
