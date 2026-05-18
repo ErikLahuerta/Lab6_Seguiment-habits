@@ -1,4 +1,7 @@
-This is the final readme needed for the submission.
+This is the final readme needed for the submission. The readme on the main folder has the instructions to launch the application.
+
+https://github.com/ErikLahuerta/Lab6_Seguiment-habits
+
 
 # Prompts
 
