@@ -39,7 +39,6 @@ function App() {
   const handleAddHabit = (formData) => {
     const newHabit = storageService.addHabit(formData);
     
-    // Guardar acción en historial
     storageService.saveHistory({
       type: 'ADD_HABIT',
       habitId: newHabit.id,
@@ -50,13 +49,12 @@ function App() {
     loadHabits();
     setShowForm(false);
     checkUndoAvailability();
-    showNotification('success', `✓ ${formData.name} ha sido creado`);
+    showNotification('success', `✓ Hábito "${formData.name}" creado exitosamente`);
   };
 
   const handleDeleteHabit = (id) => {
     const habit = habits.find((h) => h.id === id);
     
-    // Guardar acción en historial
     storageService.saveHistory({
       type: 'DELETE_HABIT',
       habitId: id,

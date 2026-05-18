@@ -50,7 +50,17 @@ export const storageService = {
     return null;
   },
 
-  // Marcar hábito como completado
+  // Verificar si un hábito ya fue completado hoy
+  isCompletedToday: (id) => {
+    const habits = storageService.getHabits();
+    const habit = habits.find((h) => h.id === id);
+    if (!habit) return false;
+    
+    const today = new Date().toISOString().split('T')[0];
+    return habit.completedDates.includes(today);
+  },
+
+  // Marcar hábito como completado (solo para marcar, no desmarcar si ya está hoy)
   toggleHabitCompletion: (id, date) => {
     const habits = storageService.getHabits();
     const habit = habits.find((h) => h.id === id);
@@ -129,6 +139,31 @@ export const storageService = {
       default:
         break;
     }
+  },
+
+  // Obtener progreso de los últimos 7 días
+  getLast7DaysProgress: (id) => {
+    const habits = storageService.getHabits();
+    const habit = habits.find((h) => h.id === id);
+    if (!habit) return [];
+
+    const today = new Date();
+    const days = [];
+    
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split('T')[0];
+      const isCompleted = habit.completedDates.includes(dateStr);
+      
+      days.push({
+        date: dateStr,
+        dayName: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab'][date.getDay()],
+        isCompleted,
+      });
+    }
+    
+    return days;
   },
 
   // Limpiar todo

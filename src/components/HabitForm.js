@@ -7,6 +7,7 @@ export const HabitForm = ({ onAdd, onCancel }) => {
     frequency: 'daily',
     color: '#667eea',
   });
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -14,14 +15,41 @@ export const HabitForm = ({ onAdd, onCancel }) => {
       ...prev,
       [name]: value,
     }));
+    // Limpiar error del campo editado
+    if (errors[name]) {
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'El nombre del hábito es requerido';
+    } else if (formData.name.trim().length < 3) {
+      newErrors.name = 'El nombre debe tener al menos 3 caracteres';
+    }
+
+    if (formData.description.trim().length > 200) {
+      newErrors.description = 'La descripción no puede exceder 200 caracteres';
+    }
+
+    return newErrors;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (formData.name.trim() === '') {
-      alert('Por favor, ingresa un nombre para el hábito');
+    
+    const newErrors = validateForm();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
+
     onAdd(formData);
     setFormData({
       name: '',
@@ -29,13 +57,12 @@ export const HabitForm = ({ onAdd, onCancel }) => {
       frequency: 'daily',
       color: '#667eea',
     });
+    setErrors({});
   };
 
   return (
     <form className="form-section" onSubmit={handleSubmit}>
-      <h2 style={{ marginBottom: '20px', color: '#333' }}>
-        Crear Nuevo Hábito
-      </h2>
+      <h2>📝 Crear Nuevo Hábito</h2>
 
       <div className="form-group">
         <label htmlFor="name">Nombre del Hábito *</label>
@@ -45,20 +72,29 @@ export const HabitForm = ({ onAdd, onCancel }) => {
           name="name"
           value={formData.name}
           onChange={handleChange}
-          placeholder="Ej: Hacer ejercicio"
+          placeholder="Ej: Hacer ejercicio, Meditar, Leer..."
           required
         />
+        {errors.name && (
+          <div className="form-error">❌ {errors.name}</div>
+        )}
       </div>
 
       <div className="form-group">
-        <label htmlFor="description">Descripción</label>
+        <label htmlFor="description">
+          Descripción ({formData.description.length}/200)
+        </label>
         <textarea
           id="description"
           name="description"
           value={formData.description}
           onChange={handleChange}
-          placeholder="Describe tu hábito..."
+          placeholder="Describe tus objetivos..."
+          maxLength="200"
         />
+        {errors.description && (
+          <div className="form-error">❌ {errors.description}</div>
+        )}
       </div>
 
       <div className="form-group">
@@ -77,9 +113,9 @@ export const HabitForm = ({ onAdd, onCancel }) => {
             fontFamily: 'inherit',
           }}
         >
-          <option value="daily">Diario</option>
-          <option value="weekly">Semanal</option>
-          <option value="monthly">Mensual</option>
+          <option value="daily">📅 Diario</option>
+          <option value="weekly">📆 Semanal</option>
+          <option value="monthly">📋 Mensual</option>
         </select>
       </div>
 
@@ -106,7 +142,7 @@ export const HabitForm = ({ onAdd, onCancel }) => {
           Cancelar
         </button>
         <button type="submit" className="btn-primary">
-          Crear Hábito
+          ✓ Crear Hábito
         </button>
       </div>
     </form>

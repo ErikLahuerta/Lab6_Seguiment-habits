@@ -27,10 +27,41 @@ export const HabitCalendar = ({
     return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
   };
 
+  const handleDayClick = (date, isCompleted, dateStr) => {
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Si ya está completado hoy, mostrar advertencia
+    if (isCompleted && dateStr === today) {
+      onShowNotification(
+        'warning',
+        `⚠️ ${habit.name} ya ha sido marcado como completado hoy. Para deshacer, usa el botón "Deshacer".`
+      );
+      return;
+    }
+
+    // Si intenta marcar un día futuro, mostrar advertencia
+    if (dateStr > today) {
+      onShowNotification(
+        'warning',
+        '⚠️ No puedes marcar hábitos para días futuros.'
+      );
+      return;
+    }
+
+    onToggleCompletion(habit.id, date);
+    onShowNotification(
+      'success',
+      isCompleted
+        ? `${habit.name} desmarcado el ${dateStr}`
+        : `✓ ${habit.name} marcado el ${dateStr}`
+    );
+  };
+
   const renderCalendar = () => {
     const daysInMonth = getDaysInMonth(currentDate);
     const firstDay = getFirstDayOfMonth(currentDate);
     const days = [];
+    const today = new Date().toISOString().split('T')[0];
 
     // Días vacíos al inicio
     for (let i = 0; i < firstDay; i++) {
@@ -48,24 +79,16 @@ export const HabitCalendar = ({
       );
       const dateStr = date.toISOString().split('T')[0];
       const isCompleted = habit.completedDates.includes(dateStr);
-      const today = new Date().toISOString().split('T')[0];
       const isPending = dateStr === today && !isCompleted;
+      const isFuture = dateStr > today;
 
       days.push(
         <div
           key={`day-${day}`}
-          className={`calendar-day ${isCompleted ? 'completed' : isPending ? 'pending' : ''}`}
-          onClick={() => {
-            onToggleCompletion(habit.id, date);
-            onShowNotification(
-              'success',
-              isCompleted
-                ? `${habit.name} desmarcado el ${dateStr}`
-                : `${habit.name} marcado el ${dateStr}`
-            );
-          }}
-          style={{ cursor: 'pointer' }}
-          title={`${dateStr}: ${isCompleted ? 'Completado' : 'No completado'}`}
+          className={`calendar-day ${isCompleted ? 'completed' : isPending ? 'pending' : isFuture ? 'future' : ''}`}
+          onClick={() => !isFuture && handleDayClick(date, isCompleted, dateStr)}
+          style={{ cursor: isFuture ? 'not-allowed' : 'pointer' }}
+          title={`${dateStr}: ${isCompleted ? 'Completado' : isFuture ? 'Futuro' : 'No completado'}`}
         >
           {day}
         </div>
@@ -123,58 +146,22 @@ export const HabitCalendar = ({
         {renderCalendar()}
       </div>
 
-      <div
-        style={{
-          marginTop: '15px',
-          fontSize: '0.85em',
-          color: '#666',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '10px',
-        }}
-      >
-        <div style={{ textAlign: 'center' }}>
-          <span
-            style={{
-              display: 'inline-block',
-              width: '20px',
-              height: '20px',
-              backgroundColor: '#51cf66',
-              borderRadius: '4px',
-              marginRight: '5px',
-              verticalAlign: 'middle',
-            }}
-          ></span>
-          Completado
+      <div className="calendar-legend">
+        <div className="legend-item">
+          <span style={{ background: 'linear-gradient(135deg, #51cf66, #40c057)' }}></span>
+          <span>Completado</span>
         </div>
-        <div style={{ textAlign: 'center' }}>
-          <span
-            style={{
-              display: 'inline-block',
-              width: '20px',
-              height: '20px',
-              backgroundColor: '#ffd43b',
-              borderRadius: '4px',
-              marginRight: '5px',
-              verticalAlign: 'middle',
-            }}
-          ></span>
-          Hoy
+        <div className="legend-item">
+          <span style={{ background: '#ffd43b' }}></span>
+          <span>Hoy</span>
         </div>
-        <div style={{ textAlign: 'center' }}>
-          <span
-            style={{
-              display: 'inline-block',
-              width: '20px',
-              height: '20px',
-              backgroundColor: '#ffffff',
-              border: '1px solid #e9ecef',
-              borderRadius: '4px',
-              marginRight: '5px',
-              verticalAlign: 'middle',
-            }}
-          ></span>
-          No completado
+        <div className="legend-item">
+          <span style={{ background: 'white', border: '2px solid #e2e8f0' }}></span>
+          <span>No completado</span>
+        </div>
+        <div className="legend-item">
+          <span style={{ background: '#f0f0f0' }}></span>
+          <span>Futuro</span>
         </div>
       </div>
     </div>

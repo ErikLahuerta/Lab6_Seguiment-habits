@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { HabitCalendar } from './HabitCalendar';
+import { storageService } from '../services/storageService';
 
 export const HabitCard = ({
   habit,
@@ -11,16 +12,19 @@ export const HabitCard = ({
 
   const handleToggleCompletion = () => {
     const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
+    const isCompletedToday = habit.completedDates.includes(todayStr);
+
+    if (isCompletedToday) {
+      onShowNotification(
+        'warning',
+        `⚠️ ${habit.name} ya ha sido marcado como completado hoy. Para deshacer, usa el botón "Deshacer".`
+      );
+      return;
+    }
+
     onToggleCompletion(habit.id, today);
-    const isCompleted = habit.completedDates.includes(
-      today.toISOString().split('T')[0]
-    );
-    onShowNotification(
-      `success`,
-      isCompleted
-        ? `${habit.name} desmarcado como completado`
-        : `${habit.name} marcado como completado`
-    );
+    onShowNotification('success', `✓ ${habit.name} marcado como completado`);
   };
 
   const handleDelete = () => {
@@ -28,7 +32,7 @@ export const HabitCard = ({
       window.confirm(`¿Estás seguro de que quieres eliminar "${habit.name}"?`)
     ) {
       onDelete(habit.id);
-      onShowNotification('info', `${habit.name} ha sido eliminado`);
+      onShowNotification('success', `✓ ${habit.name} ha sido eliminado`);
     }
   };
 
@@ -37,6 +41,7 @@ export const HabitCard = ({
 
   const currentStreak = calculateStreak(habit.completedDates);
   const completionRate = calculateCompletionRate(habit.completedDates);
+  const last7Days = storageService.getLast7DaysProgress(habit.id);
 
   return (
     <div className="habit-card">
@@ -60,15 +65,34 @@ export const HabitCard = ({
         </div>
       </div>
 
+      <div className="habit-7days">
+        <div className="stat-label" style={{ marginBottom: '8px' }}>Últimos 7 días</div>
+        <div className="days-progress">
+          {last7Days.map((day) => (
+            <div
+              key={day.date}
+              className={`day-box ${day.isCompleted ? 'completed' : ''}`}
+              title={`${day.date}: ${day.isCompleted ? 'Completado' : 'No completado'}`}
+            >
+              <div className="day-letter">{day.dayName.charAt(0)}</div>
+              <div className="day-indicator">
+                {day.isCompleted ? '✓' : ''}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="habit-actions">
         <button
-          className={`btn-primary btn-small ${isCompletedToday ? 'btn-success' : ''}`}
+          className={`btn-primary btn-small ${isCompletedToday ? 'btn-completed' : ''}`}
           onClick={handleToggleCompletion}
           style={{
             background: isCompletedToday
               ? 'linear-gradient(135deg, #51cf66 0%, #40c057 100%)'
               : undefined,
           }}
+          disabled={isCompletedToday}
         >
           {isCompletedToday ? '✓ Hoy Completado' : 'Completar Hoy'}
         </button>
