@@ -47,5 +47,11 @@ Quiero:
 # Screenshots of the final product
 Main screen of the application
 ![alt text](mainScreen.png "Main Screen")
+
+Create a new Habit
+![alt text](createHabit "Creating a Habit")
+
+Displaying all created Habits
+![alt text](habitScreen "Habit Screen")
 # Reflections on Copilot
 
